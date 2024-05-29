@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class FoquitoScript : MonoBehaviour
 {
-    [SerializeField] GameObject[] colors;
-    public int currentLightIndex =-1;
+    public GameObject[] colors;
+    public int currentLightIndex =-1; //A QUE POSICION INTENTO ACCEDER PARA QUE SE VAYA MOVIENDO CON EL ++ Y ARRANQUE EN 0
+    public int ciclocumplido = 0; 
 
     void Start()
     {
@@ -20,13 +21,17 @@ public class FoquitoScript : MonoBehaviour
 
     public void ActivateNextLight()
     {
-        currentLightIndex++;
-        if (currentLightIndex >= colors.Length)
+        currentLightIndex++; //
+        if (currentLightIndex >= colors.Length)  //CHEQUEA EL INDICE CON LA CANT DE ELEMENTOS
         {
-            currentLightIndex = 0;
+            currentLightIndex = 0; //SI SE PASA QUE VUELVA A 0 
+            ciclocumplido++; //ciclo cumplido se le suma uno xq ya termino entones hay q agregar uno a la lista
+            Checkrepetitions(); 
+
         }
-        DeactivateAllLights();
-        colors[currentLightIndex].SetActive(true);
+
+        DeactivateAllLights(); //DESACTIVO LAS LUCES
+        colors[currentLightIndex].SetActive(true); //ACTIVE ES UNA PROP DEL GAME OBJ (BOOL). MEDIANTE SETACTIVE LO ACTIVA SI ESTA EN TRUE
     }
 
     public void ActivatePreviousLight()
@@ -42,14 +47,24 @@ public class FoquitoScript : MonoBehaviour
 
     void DeactivateAllLights()
     {
-        foreach (GameObject g in colors)
+        for (int i = 0; i < colors.Length; i++)
         {
-            g.SetActive(false);
+            colors[i].SetActive(false);
         }
+
+       
     }
 
     public void ActivateRepeating(float t)
     {
         InvokeRepeating(nameof(ActivateNextLight),0,t);
+    }
+
+    void Checkrepetitions()
+    {
+        if (ciclocumplido >= 3)
+        {
+            Destroy(gameObject); 
+        }
     }
 }
